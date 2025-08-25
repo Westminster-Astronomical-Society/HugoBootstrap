@@ -2,12 +2,16 @@
 
 {{ $bootstrap := resources.Get "js/bootstrap/bootstrap.bundle.js" }}
 {{ $js := resources.Get "js/main.js" }}
+{{ $colorModes := resources.Get "js/color-modes.js" }}
 
 {{ if eq (hugo.Environment) "development" -}}
   {{ if .Site.Params.options.bootStrapJs -}}
     <script src="{{ $bootstrap.RelPermalink }}" defer></script>
   {{ end -}}
   {{ with $js }}
+    <script src="{{ .RelPermalink }}" defer></script>
+  {{ end -}}
+  {{ with $colorModes }}
     <script src="{{ .RelPermalink }}" defer></script>
   {{ end -}}
 {{ else -}}  
@@ -18,6 +22,10 @@
   {{ with $js }}
     {{ $js := . | minify | fingerprint "sha256" -}}
     <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" crossorigin="anonymous" defer></script>
+  {{ end }}
+  {{ with $colorModes }}
+    {{ $colorModes := . | minify | fingerprint "sha256" -}}
+    <script src="{{ $colorModes.RelPermalink }}" integrity="{{ $colorModes.Data.Integrity }}" crossorigin="anonymous" defer></script>
   {{ end }}
   {{ partial "footer/facebook-pixel-light.html" . }}
 {{end}}
